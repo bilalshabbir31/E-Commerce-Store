@@ -2,6 +2,7 @@ import { redis } from "../config/redis.js";
 import User from "../models/user.js";
 import { setCookies } from "../utils/cookies.js";
 import generateTokens from "../utils/generateToken.js";
+import jwt from "jsonwebtoken"
 
 const storeRefreshToken = async (userId, refreshToken) => {
   await redis.set(
@@ -50,6 +51,17 @@ export const login = (req, res) => {
   res.send("Login");
 };
 
-export const logout = (req, res) => {
-  res.send("Logout");
+export const logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      const decoded = jwt.verify(refreshToken, process.env.ACCESS_TOKEN_SECERT);
+      await redis.del(`refresh_token:${decoded.userId}`);
+    }
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ message: "Logged out Succesfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
