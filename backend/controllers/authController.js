@@ -51,8 +51,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    console.log(await user.comparePassword(password));
-    
+
     if (user && (await user.comparePassword(password))) {
       const { accessToken, refreshToken } = generateTokens(user._id);
       await storeRefreshToken(user._id, refreshToken);
@@ -81,6 +80,38 @@ export const logout = async (req, res) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.json({ message: "Logged out Succesfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// this will refresh the access token
+export const refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token Provided" });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.ACCESS_TOKEN_SECERT);
+    const storedToken = await redis.get(`refresh_token:${decoded.userId}`);
+    if (storedToken != refreshToken) {
+      return res.status(401).json({ message: "Invalid refresh token!" });
+    }
+    const accessToken = jwt.sign(
+      { userId: decoded.userId },
+      process.env.ACCESS_TOKEN_SECERT,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true, // prevents XSS attacks, cross site scripting attack
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict", // prevents CSRF attacks, cross site request forgery attack
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    res.json({ message: "Token refresh Succesfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
