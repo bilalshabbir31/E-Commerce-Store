@@ -7,6 +7,7 @@ import productRouter from "./routes/product.js";
 import cartRouter from "./routes/cart.js";
 import couponRouter from "./routes/coupon.js";
 import paymentRouter from "./routes/payment.js";
+import analyticsRouter from "./routes/analytics.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use("/api/products", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/coupons", couponRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/analytics", analyticsRouter);
 
 app.listen(PORT, () => {
   console.log("Server is running on http://localhost:" + PORT);
