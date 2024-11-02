@@ -92,12 +92,22 @@ export const getRecommendedProducts = async (req, res) => {
           name: 1,
           description: 1,
           image: 1,
-          price: 1
-        }
-      }
-    ])
-    res.json(products)
+          price: 1,
+        },
+      },
+    ]);
+    res.json(products);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
-}
+};
+
+export const getProductsByCategory = async (req, res) => {
+  const category = req.params.category;
+  try {
+    const products = await Product.find({ category });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
