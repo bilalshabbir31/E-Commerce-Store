@@ -1,4 +1,3 @@
-import { disconnect } from "mongoose";
 import Coupon from "../models/coupon.js";
 
 export const getCoupon = async (req, res) => {
