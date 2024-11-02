@@ -111,3 +111,29 @@ export const getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+export const toggleFeaturedProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      product.isFeatured = !product.isFeatured;
+      const updateProduct = await product.save();
+      await updateFeaturedProductCache();
+      res.json(updateProduct);
+    } else {
+      res.status(400).json({ message: "Product not Found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+const updateFeaturedProductCache = async () => {
+  try {
+    // lean return plain javascript objects instead of all mongoose documents.
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    await redis.set("featured_products", JSON.stringify(featuredProducts));
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
