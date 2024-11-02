@@ -6,6 +6,7 @@ import {
   refreshToken,
   getProfile,
 } from "../controllers/authController.js";
+import { protectRoute } from "../middleware/auth.js";
 
 const authRouter = express.Router();
 
@@ -13,6 +14,6 @@ authRouter.post("/signup", signup);
 authRouter.post("/login", login);
 authRouter.post("/logout", logout);
 authRouter.post("/refresh-token", refreshToken);
-// authRouter.get("/profile", getProfile);
+authRouter.get("/profile", protectRoute, getProfile);
 
 export default authRouter;
