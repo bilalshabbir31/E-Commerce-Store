@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import productRouter from "./routes/product.js";
 import cartRouter from "./routes/cart.js";
+import couponRouter from "./routes/coupon.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/coupons", couponRouter);
 
 app.listen(PORT, () => {
   console.log("Server is running on http://localhost:" + PORT);
