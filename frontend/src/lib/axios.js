@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosObj = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: import.meta.mode === "development" ? "http://localhost:8080/api" : "/api",
   withCredentials: true, // send the cookies to server
 });
 
