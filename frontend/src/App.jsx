@@ -31,7 +31,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" />} />
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
-          <Route path="/secret-dashboard" element={user === "admin" ? <AdminPage /> : <Navigate to="/login" />} />
+          <Route path="/admin" element={user?.role === "admin" ? <AdminPage /> : <Navigate to="/login" />} />
         </Routes>
       </div>
       <Toaster />
