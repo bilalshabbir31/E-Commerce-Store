@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 // Middlewares
-app.use(express.json()); // allow us to parse body of the body of request
+app.use(express.json({limit: "10mb"})); // allow us to parse body of the body of request
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
