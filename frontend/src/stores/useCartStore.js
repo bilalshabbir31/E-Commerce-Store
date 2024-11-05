@@ -9,6 +9,9 @@ export const useCartStore = create((set, get) => ({
   subtotal: 0,
   isCouponApplied: false,
   loading: false,
+  clearCart: async () => {
+    set({ cart: [], coupon: null, total: 0, subtotal: 0 });
+  },
   getCartItems: async () => {
     set({ loading: true });
     try {
