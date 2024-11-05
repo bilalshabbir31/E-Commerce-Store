@@ -7,6 +7,7 @@ export const useCartStore = create((set, get) => ({
   coupon: null,
   total: 0,
   subtotal: 0,
+  isCouponApplied: false,
   loading: false,
   getCartItems: async () => {
     set({ loading: true });
@@ -53,7 +54,7 @@ export const useCartStore = create((set, get) => ({
         item._id === productId ? { ...item, quantity } : item
       ),
     }));
-    get.calculateTotals();
+    get().calculateTotals();
   },
   removeFromCart: async (productId) => {
     try {
@@ -61,7 +62,7 @@ export const useCartStore = create((set, get) => ({
       set((prevState) => ({
         cart: prevState.cart.filter((item) => item._id !== productId),
       }));
-      get.calculateTotals();
+      get().calculateTotals();
     } catch (error) {
       toast.error(error.response.data.message || "An error occurred");
     }
