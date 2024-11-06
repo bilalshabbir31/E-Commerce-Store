@@ -31,7 +31,7 @@ export const validateCoupon = async (req, res) => {
     res.json({
       message: "Coupon is Valid",
       code: coupon.code,
-      disconnectPercentage: coupon.discountPercentage,
+      discountPercentage: coupon.discountPercentage,
     });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
